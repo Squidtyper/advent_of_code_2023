@@ -8,7 +8,7 @@ def get_color(string, color):
     for i in range(len(sub)-1, -1, -1):
         if sub[i].isdigit() == True:
             while sub[i].isdigit() == True:
-                n = n + int(sub[i]) * pow(10, j)
+                n = n + int(sub[i]) * 10 ** j
                 i-=1
                 j+=1
             break
