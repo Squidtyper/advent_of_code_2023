@@ -27,44 +27,20 @@ def get_all_stars(strings):
                 stars.append((j, i))
     return stars
 
-def find_part(parts, star):
-    
-
 def find_gears(strings, stars, parts):
-    width = len(strings[0])
-    height = len(strings)
     gears = []
     for star in stars:
-        counter = 0
-        #star[0] in x axis(character), star[1] in y axis (string)
-        if star[0] > 0 and star[1] > 0:
-            if strings[star[1] - 1][star[0] - 1].isdigit() == True:
-                counter += 1
-        if star[0] > 0:
-            if strings[star[1]][star[0] - 1].isdigit() == True:
-                counter += 1
-        if star[0] > 0 and star[1] + 1 < width:
-            if strings[star[1] + 1][star[0] - 1].isdigit() == True:
-                counter += 1
-        if star[1] > 0:
-            if strings[star[1] - 1][star[0]].isdigit() == True:
-                counter += 1
-        if star[1] + 1 < height:
-            if strings[star[1] + 1][star[0]].isdigit() == True:
-                counter += 1
-        if star[1] > 0 and star[0] + 1 < width:
-            if strings[star[1] - 1][star[0] + 1].isdigit() == True:
-                counter += 1
-        if star[0] + 1 < width:
-            if strings[star[1]][star[0] + 1].isdigit() == True:
-                counter += 1
-        if star[1] + 1 < height and star[0] + 1 < width:
-            if strings[star[1] + 1][star[0] + 1].isdigit() == True:
-                counter += 1
-        print("counter value:", counter)
-        if counter == 2:
-            print("found star:", star)
-            gears.append(star)
+        matched = []
+        points = ((star[0] - 1, star[1] - 1), (star[0] - 1, star[1]), (star[0] - 1, star[1] + 1), \
+        (star[0], star[1] - 1), (star[0], star[1] + 1), \
+        (star[0] + 1, star[1] - 1), (star[0] + 1, star[1]), (star[0] + 1, star[1] + 1))
+        for part in parts:
+            for point in points:
+                if point in part[1]:
+                    if part not in matched:
+                        matched.append(part)
+        if len(matched) == 2:
+            gears.append(matched)
     return gears
 
 
@@ -72,15 +48,16 @@ def find_gears(strings, stars, parts):
 
 #find all '*' which is adjacent to 2 numbers, return their position. 
 #search their surrounding coordinates for the parts' digits's locations, if found return the parts
-file = open("./testinput.txt", 'r')
+file = open("./input.txt", 'r')
 content = file.read()
 strings = content.split('\n')
 for string in strings:
     string.strip()
 parts = get_all_parts(strings)
 stars = get_all_stars(strings)
-#till here it is working
-gears = find_gears(strings, stars)
-print(gears)
-pairs = find_pairs(parts, gears)
-print(pairs)
+gears = find_gears(strings, stars, parts)
+total = 0
+for gear in gears:
+    power = gear[0][0] * gear[1][0]
+    total = total + power
+print(total)
