@@ -1,24 +1,19 @@
 from collections import Counter
 
-def clean_list(l):
-    while "" in l:
-        l.remove("")
-
-
 def get_type(string):
     card1, count1 = Counter(string).most_common(1)[0]
-    card2, count2 = Counter(string).most_common(2)[0]
     if count1 == 5:
         return 7
-    elif count1 == 4:
+    if count1 == 4:
         return 6
-    elif count1 == 3 and count2 == 2:
+    card2, count2 = Counter(string).most_common(2)[1]
+    if count1 == 3 and count2 == 2:
         return 5
-    elif count1 == 3:
+    if count1 == 3:
         return 4
-    elif count1 == 2 and count2 == 2:
+    if count1 == 2 and count2 == 2:
         return 3
-    elif count1 == 2:
+    if count1 == 2:
         return 2
     return 1
 
@@ -53,10 +48,6 @@ hands = []
 for line in lines:
     hands.append(hand(line))
 hands.sort(key=lambda hand: (hand.type, hand.cards))
-i = 0
-for hand in hands:
-    i+=1
-    print(hand, i)
 total = 0
 for i in range(len(hands)):
     total = total + hands[i].bet * (i + 1)
