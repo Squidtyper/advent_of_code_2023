@@ -1,15 +1,13 @@
 from collections import Counter
-from operator import itemgetter
 
 def clean_list(l):
     while "" in l:
         l.remove("")
 
 
-def get_rank(string):
+def get_type(string):
     card1, count1 = Counter(string).most_common(1)[0]
     card2, count2 = Counter(string).most_common(2)[0]
-    print(card1, count1, card2, count2)
     if count1 == 5:
         return 7
     elif count1 == 4:
@@ -22,25 +20,44 @@ def get_rank(string):
         return 3
     elif count1 == 2:
         return 2
-    else:
-        return 1
+    return 1
 
 class hand:
     def __init__(self, string):
-        self.cards = string.split(" ")[0]
+        self.cards = []
+        cards = string.split(" ")[0]
+        for card in cards:
+            if card.isdigit() == True:
+                self.cards.append(int(card))
+            elif card == 'A':
+                self.cards.append(14)
+            elif card == 'K':
+                self.cards.append(13)
+            elif card == 'Q':
+                self.cards.append(12)
+            elif card == 'J':
+                self.cards.append(11)
+            elif card == 'T':
+                self.cards.append(10)
         self.bet = int(string.split(" ")[1])
-        self.rank = get_rank(self.cards)
+        self.type = get_type(self.cards)
     def __repr__(self):
-        return repr((self.cards, self.bet, self.rank))
+        return repr((self.cards, self.bet, self.type))
     
 
 
-file = open("./testinput.txt", 'r')
+file = open("./input.txt", 'r')
 content = file.read()
 lines = content.split('\n')
 hands = []
 for line in lines:
     hands.append(hand(line))
-hands.sort(reverse = True, key=lambda hand: hand.rank)
+hands.sort(key=lambda hand: (hand.type, hand.cards))
+i = 0
 for hand in hands:
-    print(hand.cards)
+    i+=1
+    print(hand, i)
+total = 0
+for i in range(len(hands)):
+    total = total + hands[i].bet * (i + 1)
+print(total)
